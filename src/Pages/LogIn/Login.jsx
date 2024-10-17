@@ -18,48 +18,46 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleJoinNowClick = () => {
-    navigate("/"); // Adjust the route as needed
+  const handleHowItWorksClick = () => {
+    navigate("/howitworks"); // Pass the route path as a string
   };
 
-  
-async function handleSubmit(e) {
-  e.preventDefault();
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  if (!email || !password) {
-    setErrorMessage("Please fill in all fields");
-    return;
+    if (!email || !password) {
+      setErrorMessage("Please fill in all fields");
+      return;
+    }
+
+    try {
+      setProcessing(true);
+      setErrorMessage(""); // Clear previous error messages
+
+      const { data } = await axios.post("/users/login", { email, password });
+
+      localStorage.setItem("token", data.token);
+
+      // Navigate to home with state to indicate successful login
+      navigate("/", { state: { welcomeMessage: true } });
+    } catch (error) {
+      console.error("Login failed: ", error.response || error.message);
+      setErrorMessage(
+        error?.response?.data?.msg || "An unexpected error occurred"
+      );
+
+      toast.error(`${errorMessage}!`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setProcessing(false);
+    }
   }
-
-  try {
-    setProcessing(true);
-    setErrorMessage(""); // Clear previous error messages
-
-    const { data } = await axios.post("/users/login", { email, password });
-
-    localStorage.setItem("token", data.token);
-
-    // Navigate to home with state to indicate successful login
-    navigate("/", { state: { welcomeMessage: true } });
-
-  } catch (error) {
-    console.error("Login failed: ", error.response || error.message);
-    setErrorMessage(
-      error?.response?.data?.msg || "An unexpected error occurred"
-    );
-
-    toast.error(`${errorMessage}!`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  } finally {
-    setProcessing(false);
-  }
-}
 
   const handleIconToggle = () => {
     setIcon((prev) => (prev === eyeOff ? eye : eyeOff));
@@ -122,7 +120,7 @@ async function handleSubmit(e) {
                 </span>
               </div>
             </div>
-           <button
+            <button
               type="submit"
               className={classes.loginButton}
               disabled={processing}
@@ -159,7 +157,10 @@ async function handleSubmit(e) {
             looking to meet mentors of your own, please start by joining the
             network here.
           </p>
-          <button onClick={handleJoinNowClick} className={classes.howItWorks}>
+          <button
+            onClick={handleHowItWorksClick}
+            className={classes.howItWorks}
+          >
             HOW IT WORKS
           </button>
         </div>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import axios from "../../axios/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,8 +17,8 @@ function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleJoinNowClick = () => {
-    navigate("/"); // Adjust the route as needed
+  const handleHowItWorksClick = () => {
+    navigate("/howitworks"); // Pass the route path as a string
   };
 
   async function handleSubmit(e) {
@@ -171,7 +170,7 @@ function Register() {
             network here.
           </p>
           <button
-            onClick={handleJoinNowClick}
+            onClick={handleHowItWorksClick}
             className={classes.how_it_work_reg}
           >
             HOW IT WORKS
@@ -183,4 +182,3 @@ function Register() {
 }
 
 export default Register;
-
